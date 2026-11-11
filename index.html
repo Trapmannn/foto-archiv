@@ -252,3 +252,20 @@
   </p>
 
 </div>
+
+<script>
+  // Ping beim Oeffnen der Seite an einen geheimen ntfy-Kanal (nur auf GitHub Pages aktiv,
+  // in der Artifact-Vorschau blockiert die CSP den Request, das ist ok).
+  (function () {
+    try {
+      var topic = "https://ntfy.sh/caro-check-9f3k7m2x8q";
+      var when = new Date().toLocaleString("de-DE");
+      var body = "Der Testlink wurde gerade geoeffnet (" + when + ")";
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(topic, body);
+      } else {
+        fetch(topic, { method: "POST", body: body, keepalive: true });
+      }
+    } catch (e) {}
+  })();
+</script>
