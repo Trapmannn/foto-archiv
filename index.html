@@ -1,0 +1,236 @@
+<title>Kurz durchatmen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Layout: ruhige, zentrierte Spalte — erst große Entwarnung, dann Lern-Karten darunter */
+  :root {
+    --bg: #f3f1ec;
+    --surface: #ffffff;
+    --fg: #23201b;
+    --muted: #6b6559;
+    --line: #e2ddd3;
+    --accent: #3f7d6b;      /* ruhiges Salbeigrün = Entwarnung, nicht Alarm */
+    --accent-soft: #e7f0ec;
+    --warn: #b8742f;        /* warmes Ocker für "darauf achten" */
+    --warn-soft: #f6ecdd;
+    --shadow: 0 1px 2px rgba(35,32,27,.04), 0 12px 32px rgba(35,32,27,.07);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17150f;
+      --surface: #201d16;
+      --fg: #ede8df;
+      --muted: #a39b8c;
+      --line: #322d24;
+      --accent: #7bb6a2;
+      --accent-soft: #1d2a25;
+      --warn: #d69a5a;
+      --warn-soft: #2a2316;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.45);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17150f;
+    --surface: #201d16;
+    --fg: #ede8df;
+    --muted: #a39b8c;
+    --line: #322d24;
+    --accent: #7bb6a2;
+    --accent-soft: #1d2a25;
+    --warn: #d69a5a;
+    --warn-soft: #2a2316;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.45);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: clamp(2.5rem, 8vh, 5rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    padding: clamp(1.75rem, 5vw, 3rem);
+    text-align: center;
+  }
+  .mark {
+    width: 64px; height: 64px;
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .mark svg { width: 32px; height: 32px; }
+  .eyebrow {
+    font-size: .8rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 .75rem;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 6vw, 3rem);
+    line-height: 1.08;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+    letter-spacing: -.01em;
+  }
+  .lede {
+    font-size: clamp(1.05rem, 2.4vw, 1.2rem);
+    color: var(--fg);
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+  .lede strong { color: var(--accent); }
+
+  .reassure {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--accent-soft);
+    border-radius: 14px;
+    font-size: 1rem;
+    color: var(--fg);
+  }
+
+  .section-label {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 1rem 0 0;
+  }
+  .section-sub { color: var(--muted); margin: .25rem 0 0; font-size: .95rem; }
+
+  .cards { display: flex; flex-direction: column; gap: .75rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    gap: .9rem;
+    align-items: flex-start;
+  }
+  .card .ico {
+    flex: 0 0 auto;
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    display: grid; place-items: center;
+    background: var(--warn-soft);
+    color: var(--warn);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .card h3 { margin: 0 0 .2rem; font-size: 1rem; font-weight: 650; }
+  .card p { margin: 0; color: var(--muted); font-size: .94rem; min-width: 0; }
+  .card b { color: var(--fg); font-weight: 600; }
+
+  .rule {
+    display: flex; align-items: center; gap: .6rem;
+    color: var(--muted); font-size: .85rem;
+    margin: .5rem 0;
+  }
+  .rule::before, .rule::after {
+    content: ""; height: 1px; background: var(--line); flex: 1;
+  }
+
+  .outro {
+    text-align: center;
+    color: var(--muted);
+    font-size: .95rem;
+    padding: 0 1rem;
+  }
+  .outro .heart { color: var(--accent); }
+  .sign {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--fg);
+    margin-top: .4rem;
+  }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;650&display=swap">
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6 9 17l-5-5"/>
+      </svg>
+    </div>
+    <p class="eyebrow">Einmal tief durchatmen</p>
+    <h1>Das war ein Test — und alles ist gut.</h1>
+    <p class="lede">Die Mail war <strong>nicht echt</strong>. Es gibt keinen Beweis, keine Geschichte, nichts ist passiert. Ich habe dir das geschickt, weil wir genau das zusammen geübt haben: Phishing erkennen.</p>
+
+    <div class="reassure">
+      💚 &nbsp;Wichtig zuerst: Die Behauptung in der Mail ist frei erfunden. Ich habe dich nicht betrogen. Das Einzige, was hier echt ist, ist dieser Satz.
+    </div>
+  </section>
+
+  <div>
+    <p class="section-label">Und jetzt kurz lernen 📬</p>
+    <p class="section-sub">Du bist draufgeklickt — völlig normal, die Mail war mit Absicht fies gebaut. So hättest du sie enttarnen können:</p>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="ico">1</div>
+      <div>
+        <h3>Starke Emotion = Alarmsignal</h3>
+        <p>Angst, Panik, Eifersucht, Zeitdruck — echte Angriffe wollen, dass du <b>fühlst statt denkst</b>. Je heftiger eine Mail dich triggert, desto misstrauischer sein.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ico">2</div>
+      <div>
+        <h3>Absender genau anschauen</h3>
+        <p>Nicht nur den angezeigten Namen, sondern die <b>echte Adresse</b> dahinter. Stimmt die Domain? Kleine Tippfehler, komische Endungen, Zahlen drin?</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ico">3</div>
+      <div>
+        <h3>Links prüfen, bevor du klickst</h3>
+        <p>Am Handy lange auf den Link drücken, am PC mit der Maus drüberhalten. Es erscheint das <b>echte Ziel</b> — und das sah hier anders aus als erwartet.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ico">4</div>
+      <div>
+        <h3>Im Zweifel: anderen Weg nehmen</h3>
+        <p>Niemals über den Button in der Mail. Lieber <b>direkt fragen oder anrufen</b>. Bei „Beweis, dass dein Freund dich betrügt" wäre der kürzeste Weg gewesen: mich fragen. 😄</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule">das war's</div>
+
+  <p class="outro">
+    Du bist nicht „dumm" darauf reingefallen — die Mails sind gut gemacht, deshalb üben wir ja. Beim nächsten Mal hast du eins dieser vier Signale im Kopf, und das reicht schon.
+    <br>
+    <span class="sign">Hab dich lieb <span class="heart">♥</span></span>
+  </p>
+
+</div>
